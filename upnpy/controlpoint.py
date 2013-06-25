@@ -8,6 +8,7 @@ the API, and implements the bulk of the UPnP functionality.
 """
 import socket
 import random
+import time
 
 # Minimum and maximum ports to bind to locally.
 LOW_PORT  = 10000
@@ -27,6 +28,7 @@ class ControlPoint(object):
         local_port = random.randint(LOW_PORT, HIGH_PORT)
         self.__udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.__udp_socket.bind(('', local_port))
+        self.__udp_socket.setblocking(0)
         return
 
     def discover(self, duration):
@@ -37,7 +39,7 @@ class ControlPoint(object):
                          initial discovery request.
         """
         # Set the socket to broadcast mode.
-        sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        self.__udp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
         # Build the message. Currently, this just involves blatting a
         # pre-written message over the wire.
@@ -49,5 +51,28 @@ class ControlPoint(object):
                            ""])
 
         # Send the message.
-        sock.sendto(msg, ('<broadcast>', 1900))
+        self.__udp_socket.sendto(msg, ('<broadcast>', 1900))
+
+        # Return the socket to its pre-broadcast-mode state.
+        self.__udp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+
+        return self._listen_for_discover(duration)
+
+    def _listen_for_discover(self, duration):
+        """
+        Listen for responses to the discovery packet for a number of seconds up
+        to the value of ``duration``.
+
+        :param duration: The number of seconds to listen for responses to the
+                         initial discovery request.
+        """
+        start = time.time()
+
+        while (time.time() < (start + duration)):
+            try:
+                data, addr = self.__udp_socket.recvfrom(2048)
+                print data
+            except socket.error:
+                pass
+
         return
