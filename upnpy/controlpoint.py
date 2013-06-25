@@ -14,6 +14,10 @@ import time
 LOW_PORT  = 10000
 HIGH_PORT = 65535
 
+# SSDP port
+SSDP_PORT = 1900
+
+
 class ControlPoint(object):
     """
     Represents a single UPnP control point.
@@ -51,10 +55,7 @@ class ControlPoint(object):
                            ""])
 
         # Send the message.
-        self.__udp_socket.sendto(msg, ('<broadcast>', 1900))
-
-        # Return the socket to its pre-broadcast-mode state.
-        self.__udp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        self.__udp_socket.sendto(msg, ('<broadcast>', SSDP_PORT))
 
         return self._listen_for_discover(duration)
 
