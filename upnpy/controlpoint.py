@@ -50,4 +50,4 @@ class ControlPoint(object):
 
         # Send the message.
         sock.sendto(msg, ('<broadcast>', 1900))
-        sock.close()
+        return
