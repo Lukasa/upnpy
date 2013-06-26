@@ -12,7 +12,7 @@ Right now it doesn't implement anything, though.
 Usage
 -----
 
-..code-block :: python
+.. code-block:: python
 
     import upnpy
     cp = upnpy.ControlPoint()
