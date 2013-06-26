@@ -9,6 +9,7 @@ the API, and implements the bulk of the UPnP functionality.
 import socket
 import random
 import time
+from .httpu import HTTPUResponse
 
 # Minimum and maximum ports to bind to locally.
 LOW_PORT  = 10000
@@ -57,7 +58,13 @@ class ControlPoint(object):
         # Send the message.
         self.__udp_socket.sendto(msg, ('<broadcast>', SSDP_PORT))
 
-        return self._listen_for_discover(duration)
+        # Get the responses.
+        packets = self._listen_for_discover(duration)
+
+        # Parse them.
+        packets = [HTTPUResponse.from_datagram(*packet) for packet in packets]
+
+        return
 
     def _listen_for_discover(self, duration):
         """
@@ -68,12 +75,13 @@ class ControlPoint(object):
                          initial discovery request.
         """
         start = time.time()
+        packets = []
 
         while (time.time() < (start + duration)):
             try:
                 data, addr = self.__udp_socket.recvfrom(2048)
-                print data
+                packets.append((data, addr))
             except socket.error:
                 pass
 
-        return
+        return packets
