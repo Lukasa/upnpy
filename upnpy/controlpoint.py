@@ -10,6 +10,7 @@ import socket
 import random
 import time
 from .httpu import HTTPUResponse
+from .device import device_from_httpu_response
 
 # Minimum and maximum ports to bind to locally.
 LOW_PORT  = 10000
@@ -64,7 +65,10 @@ class ControlPoint(object):
         # Parse them.
         packets = [HTTPUResponse.from_datagram(*packet) for packet in packets]
 
-        return
+        # Build the devices.
+        devices = [device_from_httpu_response(packet) for packet in packets]
+
+        return devices
 
     def _listen_for_discover(self, duration):
         """
