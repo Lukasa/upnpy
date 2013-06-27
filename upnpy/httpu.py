@@ -14,11 +14,22 @@ class HTTPUResponse(object):
     dictionary.
     """
     def __init__(self):
+        #: The numerical response code on the response.
         self.response_code = 0
+
+        #: The reason phrase on the response.
         self.reason = None
+
+        #: The message body.
         self.body = ''
+
+        #: The headers on the message. Currently a case-sensitive dict.
         self.headers = {}
+
+        #: A string containing the source IP.
         self.source_ip = ''
+
+        #: A string containing the source port.
         self.source_port = ''
 
     @classmethod

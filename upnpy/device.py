@@ -19,6 +19,11 @@ class Device(object):
     class will be used to represent it.
     """
     def __init__(self):
+        #: The server string, as reported by the UPnP device during discovery.
         self.server = ''
+
+        #: The Unique Service Name for this service.
         self.service_name = ''
+
+        #: The Search Target for the device.
         self.search_target = ''
