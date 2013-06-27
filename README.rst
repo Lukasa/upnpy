@@ -16,7 +16,7 @@ Usage
 
     import upnpy
     cp = upnpy.ControlPoint()
-    cp.discover(30)
+    devices = cp.discover(30)
 
 Caveats
 -------
