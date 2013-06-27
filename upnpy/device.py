@@ -27,3 +27,6 @@ class Device(object):
 
         #: The Search Target for the device.
         self.search_target = ''
+
+        # The URL for the UPnP description of the device.
+        self.location = ''
