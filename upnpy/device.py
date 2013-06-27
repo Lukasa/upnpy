@@ -10,6 +10,32 @@ A "device" is a slightly abstract notion in UPnP, and does not directly
 correspond to a network element. Any given network element may actually be
 multiple UPnP devices, or may be only a single UPnP device.
 """
+#: The device map maps Search Target strings
+#: (e.g. 'urn:schemas-upnp-org:service:Layer3Forwarding:1') to the classes
+#: that should be used for those devices. If a search target string cannot be
+#: found, the generic Device class will be used.
+device_map = {}
+
+def device_from_httpu_response(response):
+    """
+    Given a single HTTPU response, prepares a basic in-memory representation of
+    the device. The devices returned from this function will be very basic: in
+    particular, they will not have had their descriptions retrieved yet.
+    """
+    st_string = response.headers['ST']
+
+    try:
+        dev = device_map[st_string]()
+    except KeyError:
+        dev = Device()
+
+    dev.server = response.headers['SERVER']
+    dev.service_name = response.headers['USN']
+    dev.search_target = response.headers['ST']
+    dev.location = response.headers['LOCATION']
+
+    return dev
+
 
 class Device(object):
     """
