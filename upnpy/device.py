@@ -10,11 +10,15 @@ A "device" is a slightly abstract notion in UPnP, and does not directly
 correspond to a network element. Any given network element may actually be
 multiple UPnP devices, or may be only a single UPnP device.
 """
+import requests
+
+
 #: The device map maps Search Target strings
 #: (e.g. 'urn:schemas-upnp-org:service:Layer3Forwarding:1') to the classes
 #: that should be used for those devices. If a search target string cannot be
 #: found, the generic Device class will be used.
 device_map = {}
+
 
 def device_from_httpu_response(response):
     """
@@ -56,3 +60,12 @@ class Device(object):
 
         # The URL for the UPnP description of the device.
         self.location = ''
+
+    def describe(self):
+        """
+        Retrieve the device description. In this case, for an unknown device,
+        we just return the XML.
+        """
+        desc = requests.get(self.location)
+        desc.raise_for_status()
+        return desc.text
