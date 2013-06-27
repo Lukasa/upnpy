@@ -66,7 +66,7 @@ class HTTPUResponse(object):
             # We pretend that header keys can't contain colons. They can, but
             # mostly they don't, so we should be fine.
             key, value = lines.pop(0).split(':', 1)
-            resp.headers[key] = value
+            resp.headers[key.strip()] = value.strip()
 
         # What remains is the HTTP body. Combine it all back up and whack it
         # in.
