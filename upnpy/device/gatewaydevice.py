@@ -9,6 +9,7 @@ It explicitly knows how to parse the XML device description for IGDs.
 import requests
 import xml.etree.ElementTree
 from .device import Device
+from .utils import camelcase_to_underscore
 
 
 class GatewayDeviceV1(Device):
@@ -22,10 +23,14 @@ class GatewayDeviceV1(Device):
         """
         r = requests.get(self.location)
         r.raise_for_status()
-        xml = ElementTree.parse(r.text).getroot()
+        root = ElementTree.parse(r.text).getroot()
 
-        # Begin by setting the base URL.
-        return xml
+        # Start by populating the base URL.
+        self._set_base_url(root)
+
+        self._describe_device(root)
+
+        return
 
     def _set_base_url(self, root):
         """
@@ -40,4 +45,34 @@ class GatewayDeviceV1(Device):
         else:
             self.base_url = ('http://' + self.source_ip + ':' +
                              str(self.source_port))
+        return
+
+    def _describe_device(self, root):
+        """
+        Given the root of the description XML, grab the device portion and use
+        it to populate this object.
+
+        :param root: The ElementTree root of the description XML.
+        """
+        dev = root.find('device')
+
+        if not dev:
+            raise ValueError('Malformed XML received: absent device tag.')
+
+        # Begin by populating some of the informational fields. These are all
+        # plain strings.
+        informational_fields = ['deviceType', 'friendlyName', 'manufacturer',
+                                'manufacturerURL', 'modelDescription',
+                                'modelName', 'modelNumber', 'modelURL',
+                                'serialNumber', 'UDN', 'UPC',
+                                'presentationURL']
+
+        for field in informational_fields:
+            try:
+                attr_name = camelcase_to_underscore(field)
+                setattr(self, attr_name, dev.find(field).text)
+            except AttributeError:
+                # dev.find() returned None
+                pass
+
         return
