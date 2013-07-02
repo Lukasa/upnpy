@@ -18,9 +18,9 @@ def camelcase_to_underscore(text):
     outstr = []
 
     for char in text:
-        if char.is_lower():
+        if char.islower():
             outstr.append(char)
-        elif outstr[-1].is_lower():
+        elif (len(outstr) > 0) and (outstr[-1].islower()):
             outstr.append('_')
             outstr.append(char.lower())
         else:
