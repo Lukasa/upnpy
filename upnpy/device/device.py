@@ -13,13 +13,6 @@ multiple UPnP devices, or may be only a single UPnP device.
 import requests
 
 
-#: The device map maps Search Target strings
-#: (e.g. 'urn:schemas-upnp-org:service:Layer3Forwarding:1') to the classes
-#: that should be used for those devices. If a search target string cannot be
-#: found, the generic Device class will be used.
-device_map = {}
-
-
 def device_from_httpu_response(response):
     """
     Given a single HTTPU response, prepares a basic in-memory representation of
