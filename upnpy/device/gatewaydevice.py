@@ -7,7 +7,7 @@ This is an implementation of the Internet Gateway Device v1.0 specification.
 It explicitly knows how to parse the XML device description for IGDs.
 """
 import requests
-import xml.etree.ElementTree
+import xml.etree.ElementTree as ElementTree
 from .device import Device
 from ..utils import camelcase_to_underscore
 
@@ -23,7 +23,7 @@ class GatewayDeviceV1(Device):
         """
         r = requests.get(self.location)
         r.raise_for_status()
-        root = ElementTree.parse(r.text).getroot()
+        root = ElementTree.fromstring(r.text)
 
         # Start by populating the base URL.
         self._set_base_url(root)

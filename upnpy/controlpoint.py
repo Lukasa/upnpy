@@ -19,7 +19,6 @@ HIGH_PORT = 65535
 # SSDP port
 SSDP_PORT = 1900
 
-
 #: The device map maps Search Target strings
 #: (e.g. 'urn:schemas-upnp-org:service:Layer3Forwarding:1') to the classes
 #: that should be used for those devices. If a search target string cannot be
