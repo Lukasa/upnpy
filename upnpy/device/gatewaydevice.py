@@ -29,8 +29,7 @@ class GatewayDeviceV1(Device):
 
     def _set_base_url(self, root):
         """
-        Given an ElementTree root of the description XML, set the
-        base URL.
+        Given an ElementTree root of the description XML, set the base URL.
 
         :param root: The ElementTree root of the description XML.
         """
