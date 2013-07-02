@@ -10,6 +10,7 @@ import requests
 import xml.etree.ElementTree as ElementTree
 from .device import Device
 from ..utils import camelcase_to_underscore
+from ..service import init_service
 
 
 class GatewayDeviceV1(Device):
@@ -58,6 +59,8 @@ class GatewayDeviceV1(Device):
 
         :param root: The ElementTree root of the description XML.
         """
+        self.services = []
+
         dev = root.find(self.__ns + 'device')
 
         if dev is None:
@@ -78,5 +81,13 @@ class GatewayDeviceV1(Device):
             except AttributeError:
                 # dev.find() returned None
                 pass
+
+        # Now create the child services.
+        service_list = root.find(self.__ns + 'serviceList')
+
+        for service in service_list:
+            service_type = service.find(self.__ns + 'serviceType').text
+            new_service = init_service(self, service, service_Type, self.__ns)
+            self.services.append(new_service)
 
         return
