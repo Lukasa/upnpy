@@ -37,6 +37,8 @@ def device_from_httpu_response(response):
     dev.service_name = response.headers['USN']
     dev.search_target = response.headers['ST']
     dev.location = response.headers['LOCATION']
+    dev.source_ip = response.source_ip
+    dev.source_port = response.source_port
 
     return dev
 
@@ -60,6 +62,12 @@ class Device(object):
 
         # The URL for the UPnP description of the device.
         self.location = ''
+
+        #: The IP address of the device.
+        self.source_ip = ''
+
+        #: The port the device has bound.
+        self.source_port = None
 
     def describe(self):
         """
