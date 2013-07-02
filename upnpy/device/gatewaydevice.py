@@ -60,7 +60,7 @@ class GatewayDeviceV1(Device):
         """
         dev = root.find(self.__ns + 'device')
 
-        if not dev:
+        if dev is None:
             raise ValueError('Malformed XML received: absent device tag.')
 
         # Begin by populating some of the informational fields. These are all
