@@ -25,6 +25,10 @@ class GatewayDeviceV1(Device):
         r.raise_for_status()
         root = ElementTree.fromstring(r.text)
 
+        # Save off the namespace, which ElementTree obnoxiously prepends to all
+        # the node names.
+        self.__ns = root.tag.replace('root', '')
+
         # Start by populating the base URL.
         self._set_base_url(root)
 
@@ -38,7 +42,7 @@ class GatewayDeviceV1(Device):
 
         :param root: The ElementTree root of the description XML.
         """
-        base = root.find('URLBase')
+        base = root.find(self.__ns + 'URLBase')
 
         if base:
             self.base_url = base.text
@@ -54,7 +58,7 @@ class GatewayDeviceV1(Device):
 
         :param root: The ElementTree root of the description XML.
         """
-        dev = root.find('device')
+        dev = root.find(self.__ns + 'device')
 
         if not dev:
             raise ValueError('Malformed XML received: absent device tag.')
@@ -70,7 +74,7 @@ class GatewayDeviceV1(Device):
         for field in informational_fields:
             try:
                 attr_name = camelcase_to_underscore(field)
-                setattr(self, attr_name, dev.find(field).text)
+                setattr(self, attr_name, dev.find(self.__ns + field).text)
             except AttributeError:
                 # dev.find() returned None
                 pass
