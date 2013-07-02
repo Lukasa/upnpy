@@ -9,7 +9,7 @@ It explicitly knows how to parse the XML device description for IGDs.
 import requests
 import xml.etree.ElementTree
 from .device import Device
-from .utils import camelcase_to_underscore
+from ..utils import camelcase_to_underscore
 
 
 class GatewayDeviceV1(Device):

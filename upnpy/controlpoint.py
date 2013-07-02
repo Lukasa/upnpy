@@ -10,7 +10,7 @@ import socket
 import random
 import time
 from .httpu import HTTPUResponse
-from .device import device_from_httpu_response
+from .device import Device, GatewayDeviceV1
 
 # Minimum and maximum ports to bind to locally.
 LOW_PORT  = 10000
@@ -18,6 +18,38 @@ HIGH_PORT = 65535
 
 # SSDP port
 SSDP_PORT = 1900
+
+
+#: The device map maps Search Target strings
+#: (e.g. 'urn:schemas-upnp-org:service:Layer3Forwarding:1') to the classes
+#: that should be used for those devices. If a search target string cannot be
+#: found, the generic Device class will be used.
+device_map = {
+    'urn:schemas-upnp-org:device:InternetGatewayDevice:1': GatewayDeviceV1
+}
+
+
+def device_from_httpu_response(response):
+    """
+    Given a single HTTPU response, prepares a basic in-memory representation of
+    the device. The devices returned from this function will be very basic: in
+    particular, they will not have had their descriptions retrieved yet.
+    """
+    st_string = response.headers['ST']
+
+    try:
+        dev = device_map[st_string]()
+    except KeyError:
+        dev = Device()
+
+    dev.server = response.headers['SERVER']
+    dev.service_name = response.headers['USN']
+    dev.search_target = response.headers['ST']
+    dev.location = response.headers['LOCATION']
+    dev.source_ip = response.source_ip
+    dev.source_port = response.source_port
+
+    return dev
 
 
 class ControlPoint(object):

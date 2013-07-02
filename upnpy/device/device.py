@@ -13,29 +13,6 @@ multiple UPnP devices, or may be only a single UPnP device.
 import requests
 
 
-def device_from_httpu_response(response):
-    """
-    Given a single HTTPU response, prepares a basic in-memory representation of
-    the device. The devices returned from this function will be very basic: in
-    particular, they will not have had their descriptions retrieved yet.
-    """
-    st_string = response.headers['ST']
-
-    try:
-        dev = device_map[st_string]()
-    except KeyError:
-        dev = Device()
-
-    dev.server = response.headers['SERVER']
-    dev.service_name = response.headers['USN']
-    dev.search_target = response.headers['ST']
-    dev.location = response.headers['LOCATION']
-    dev.source_ip = response.source_ip
-    dev.source_port = response.source_port
-
-    return dev
-
-
 class Device(object):
     """
     The base class for all UPnP devices. This class defines the expected
