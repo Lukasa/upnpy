@@ -16,14 +16,17 @@ def camelcase_to_underscore(text):
     :param text: The string to convert.
     """
     outstr = []
+    previous = ''
 
     for char in text:
         if char.islower():
             outstr.append(char)
-        elif (len(outstr) > 0) and (outstr[-1].islower()):
+        elif (len(outstr) > 0) and (previous.islower()):
             outstr.append('_')
             outstr.append(char.lower())
         else:
             outstr.append(char.lower())
+
+        previous = char
 
     return ''.join(outstr)
