@@ -83,11 +83,11 @@ class GatewayDeviceV1(Device):
                 pass
 
         # Now create the child services.
-        service_list = root.find(self.__ns + 'serviceList')
+        service_list = dev.find(self.__ns + 'serviceList')
 
         for service in service_list:
             service_type = service.find(self.__ns + 'serviceType').text
-            new_service = init_service(self, service, service_Type, self.__ns)
+            new_service = init_service(self, service, service_type, self.__ns)
             self.services.append(new_service)
 
         return
