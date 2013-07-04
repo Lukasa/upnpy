@@ -22,8 +22,8 @@ def init_service(parent_device, service_root, service_type, namespace):
     :param namespace: The XML namespace string prepended to all ETree nodes.
     """
     try:
-        service = service_map[service_type]()
+        service = service_map[service_type]
     except KeyError:
-        service = Service()
+        service = Service
 
-    return service
+    return service(parent_device, service_root, service_type, namespace)
