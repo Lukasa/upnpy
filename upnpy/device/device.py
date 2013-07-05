@@ -47,3 +47,12 @@ class Device(object):
         desc = requests.get(self.location)
         desc.raise_for_status()
         return desc.text
+
+    def describe_from_xml_node(self, node):
+        """
+        Describe the device from the XML node representing it in some parent
+        device's XML description.
+
+        :param node: The ElementTree node representing the root of the device.
+        """
+        raise NotImplementedError()
