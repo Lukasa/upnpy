@@ -11,6 +11,7 @@ import xml.etree.ElementTree as ElementTree
 from .device import Device
 from ..utils import camelcase_to_underscore
 from ..service import init_service
+from ..controlpoint import device_map
 
 
 class GatewayDeviceV1(Device):
@@ -60,6 +61,7 @@ class GatewayDeviceV1(Device):
         :param root: The ElementTree root of the description XML.
         """
         self.services = []
+        self.devices = []
 
         dev = root.find(self.__ns + 'device')
 
@@ -89,5 +91,17 @@ class GatewayDeviceV1(Device):
             service_type = service.find(self.__ns + 'serviceType').text
             new_service = init_service(self, service, service_type, self.__ns)
             self.services.append(new_service)
+
+        # Finally, find the child devices.
+        device_list = dev.find(self.__ns + 'deviceList') or []
+
+        for device in device_list:
+            device_type = device.find(self.__ns + 'deviceType').text
+            new_device = device_map.get(device_type, Device)()
+            new_device.server = self.server
+            new_device.source_ip = self.source_ip
+            new_device.source_port = self.source_port
+            self.devices.append(new_device)
+
 
         return
