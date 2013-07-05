@@ -7,3 +7,4 @@ This module contains classes that define behaviours of UPnP devices.
 """
 from .device import Device
 from .gatewaydevice import GatewayDeviceV1
+from .wanconnection import WANConnectionV1

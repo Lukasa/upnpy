@@ -10,7 +10,7 @@ import socket
 import random
 import time
 from .httpu import HTTPUResponse
-from .device import Device, GatewayDeviceV1
+from .device import Device, GatewayDeviceV1, WANConnectionV1
 
 # Minimum and maximum ports to bind to locally.
 LOW_PORT  = 10000

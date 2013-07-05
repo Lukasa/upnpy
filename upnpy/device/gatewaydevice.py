@@ -9,9 +9,15 @@ It explicitly knows how to parse the XML device description for IGDs.
 import requests
 import xml.etree.ElementTree as ElementTree
 from .device import Device
+from .wanconnection import WANConnectionV1
 from ..utils import camelcase_to_underscore
 from ..service import init_service
-from ..controlpoint import device_map
+
+# A subsidiary device map, indicating the subsidiary devices available on an
+# IGD.
+sub_device_map = {
+    'urn:schemas-upnp-org:device:WANConnectionDevice:1': WANConnectionV1,
+}
 
 
 class GatewayDeviceV1(Device):
@@ -97,7 +103,7 @@ class GatewayDeviceV1(Device):
 
         for device in device_list:
             device_type = device.find(self.__ns + 'deviceType').text
-            new_device = device_map.get(device_type, Device)()
+            new_device = sub_device_map.get(device_type, Device)()
             new_device.server = self.server
             new_device.source_ip = self.source_ip
             new_device.source_port = self.source_port
