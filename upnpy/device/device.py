@@ -55,4 +55,4 @@ class Device(object):
 
         :param node: The ElementTree node representing the root of the device.
         """
-        raise NotImplementedError()
+        pass

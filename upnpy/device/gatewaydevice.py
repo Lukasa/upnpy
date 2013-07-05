@@ -101,6 +101,7 @@ class GatewayDeviceV1(Device):
             new_device.server = self.server
             new_device.source_ip = self.source_ip
             new_device.source_port = self.source_port
+            new_device.describe_from_xml_node(device)
             self.devices.append(new_device)
 
 
