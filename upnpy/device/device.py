@@ -39,6 +39,9 @@ class Device(object):
         #: The port the device has bound.
         self.source_port = None
 
+        #: The device's parent device (if any).
+        self.parent = None
+
     def describe(self):
         """
         Retrieve the device description. In this case, for an unknown device,
@@ -48,11 +51,12 @@ class Device(object):
         desc.raise_for_status()
         return desc.text
 
-    def describe_from_xml_node(self, node):
+    def describe_from_xml_node(self, node, parent):
         """
         Describe the device from the XML node representing it in some parent
         device's XML description.
 
         :param node: The ElementTree node representing the root of the device.
+        :param parent: (optional) The parent of this device.
         """
         pass

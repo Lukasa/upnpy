@@ -104,5 +104,4 @@ class GatewayDeviceV1(Device):
             new_device.describe_from_xml_node(device)
             self.devices.append(new_device)
 
-
         return
