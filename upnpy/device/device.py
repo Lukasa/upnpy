@@ -51,12 +51,13 @@ class Device(object):
         desc.raise_for_status()
         return desc.text
 
-    def describe_from_xml_node(self, node, parent):
+    def describe_from_xml_node(self, node, parent, namespace):
         """
         Describe the device from the XML node representing it in some parent
         device's XML description.
 
         :param node: The ElementTree node representing the root of the device.
         :param parent: (optional) The parent of this device.
+        :param namespace: The ElementTree namespace used in the XML.
         """
         pass
