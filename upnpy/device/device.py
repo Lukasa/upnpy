@@ -45,6 +45,12 @@ class Device(object):
         #: A mapping of UPnP service type strings to subdevices of this device.
         self.sub_device_map = {}
 
+        #: Any services implemented by this UPnP device.
+        self.services = []
+
+        #: Any sub-devices of this UPnP device.
+        self.devices = []
+
     def describe(self):
         """
         Retrieve the device description. In this case, for an unknown device,

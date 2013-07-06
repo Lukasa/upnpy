@@ -17,8 +17,6 @@ class WANConnectionV1(Device):
     """
     def __init__(self):
         super(WANConnectionV1, self).__init__()
-        self.services
-        self.devices
 
     def describe_from_xml_node(self, node, parent, namespace):
         """
