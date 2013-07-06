@@ -11,6 +11,8 @@ correspond to a network element. Any given network element may actually be
 multiple UPnP devices, or may be only a single UPnP device.
 """
 import requests
+from ..utils import camelcase_to_underscore
+from ..service import init_service
 
 
 class Device(object):
@@ -69,4 +71,49 @@ class Device(object):
         :param parent: (optional) The parent of this device.
         :param namespace: The ElementTree namespace used in the XML.
         """
-        pass
+        self.parent = parent
+
+        # Try to get the base URL, and if not available use the parent's.
+        try:
+            self.base_url = node.find(namespace + 'URLBase').text
+        except AttributeError:
+            self.base_url = parent.base_url
+
+        # Populate some of the informational fields. These are all plain
+        # strings.
+        informational_fields = ['deviceType', 'friendlyName', 'manufacturer',
+                                'manufacturerURL', 'modelDescription',
+                                'modelName', 'modelNumber', 'modelURL',
+                                'serialNumber', 'UDN', 'UPC',
+                                'presentationURL']
+
+        for field in informational_fields:
+            try:
+                attr_name = camelcase_to_underscore(field)
+                setattr(self, attr_name, node.find(namespace + field).text)
+            except AttributeError:
+                pass
+
+        # Create child services. No, not that kind.
+        service_list = node.find(namespace + 'serviceList')
+        service_list = service_list if service_list is not None else []
+
+        for service in service_list:
+            service_type = service.find(namespace + 'serviceType').text
+            new_service = init_service(self, service, service_type, namespace)
+            self.services.append(new_service)
+
+        # Create child devices.
+        device_list = node.find(namespace + 'deviceList')
+        device_list = device_list if device_list is not None else []
+
+        for device in device_list:
+            device_type = device.find(namespace + 'deviceType').text
+            new_device = self.sub_device_map.get(device_type, Device)()
+            new_device.server = self.server
+            new_device.source_ip = self.source_ip
+            new_device.source_port = self.source_port
+            new_device.describe_from_xml_node(device, self, namespace)
+            self.devices.append(new_device)
+
+        return
