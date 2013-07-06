@@ -94,6 +94,7 @@ class GatewayDeviceV1(Device):
 
         # Now create the child services.
         service_list = dev.find(self.__ns + 'serviceList')
+        service_list = service_list if service_list is not None else []
 
         for service in service_list:
             service_type = service.find(self.__ns + 'serviceType').text
@@ -101,7 +102,8 @@ class GatewayDeviceV1(Device):
             self.services.append(new_service)
 
         # Finally, find the child devices.
-        device_list = dev.find(self.__ns + 'deviceList') or []
+        device_list = dev.find(self.__ns + 'deviceList')
+        device_list = device_list if device_list is not None else []
 
         for device in device_list:
             device_type = device.find(self.__ns + 'deviceType').text

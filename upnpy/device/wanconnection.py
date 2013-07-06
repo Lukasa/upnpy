@@ -54,6 +54,7 @@ class WANConnectionV1(Device):
 
         # Create child services. No, not that kind.
         service_list = node.find(namespace + 'serviceList')
+        service_list = service_list if service_list is not None else []
 
         for service in service_list:
             service_type = service.find(namespace + 'serviceType').text
