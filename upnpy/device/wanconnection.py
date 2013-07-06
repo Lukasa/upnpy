@@ -15,6 +15,11 @@ class WANConnectionV1(Device):
     device enables a UPnP Control Point to configure and control IP connections
     on the WAN interface of a UPnP compliant InternetGatewayDevice.
     """
+    def __init__(self):
+        super(WANConnectionV1, self).__init__()
+        self.services
+        self.devices
+
     def describe_from_xml_node(self, node, parent, namespace):
         """
         Uses the XML returned by the IGD description to prepare this device.
