@@ -9,6 +9,7 @@ It explicitly knows how to parse the XML device description for IGDs.
 import requests
 import xml.etree.ElementTree as ElementTree
 from .device import Device
+from .wandevice import WANDeviceV1
 from ..utils import camelcase_to_underscore
 from ..service import init_service
 
@@ -23,7 +24,7 @@ class GatewayDeviceV1(Device):
         super(GatewayDeviceV1, self).__init__()
 
         self.sub_device_map = {
-            'urn:schemas-upnp-org:device:WANConnectionDevice:1': WANConnectionV1,
+            'urn:schemas-upnp-org:device:WANDevice:1': WANDeviceV1,
         }
 
     def describe(self):
