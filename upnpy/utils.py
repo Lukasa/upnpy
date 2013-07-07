@@ -5,6 +5,7 @@ utils.py
 
 Defines utility functions used by UPnPy.
 """
+from xml.etree.ElementTree import Element, SubElement
 
 
 def camelcase_to_underscore(text):
@@ -30,3 +31,16 @@ def camelcase_to_underscore(text):
         previous = char
 
     return ''.join(outstr)
+
+
+def get_SOAP_RPC_base():
+    """
+    Prepares the base XML for a SOAP RPC call. Returns a tuple containg the
+    root element and then the element that contains the body.
+    """
+    envelope = Element('s:Envelope',
+                       {'xmlns:s': 'http://schemas.xmlsoap.org/soap/envelope/',
+                        's:encodingStyle': 'http://schemas.xmlsoap.org/soap/encoding/'})
+    body = SubElement(envelope, 's:Body')
+
+    return envelope, body
