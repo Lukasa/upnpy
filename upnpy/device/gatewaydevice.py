@@ -11,7 +11,7 @@ import xml.etree.ElementTree as ElementTree
 from .device import Device
 from .wandevice import WANDeviceV1
 from ..utils import camelcase_to_underscore
-from ..service import init_service
+from ..servicemapping import init_service
 
 # A subsidiary device map, indicating the subsidiary devices available on an
 # IGD.

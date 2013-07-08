@@ -12,7 +12,7 @@ multiple UPnP devices, or may be only a single UPnP device.
 """
 import requests
 from ..utils import camelcase_to_underscore
-from ..service import init_service
+from ..servicemapping import init_service
 
 
 class Device(object):
