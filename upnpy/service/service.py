@@ -6,6 +6,7 @@ service.py
 Define a base Service class. This is the class that is used when we don't know
 anything about a given Service.
 """
+import requests
 import xml.etree.ElementTree as ET
 from ..utils import get_SOAP_RPC_base
 
@@ -71,7 +72,7 @@ class Service(object):
 
         # Build the default headers.
         headers = {'CONTENT-TYPE': 'text/xml; charset="utf-8"',
-                   'SOAPACTION': service + '#' + action_name}
+                   'SOAPACTION': self.service_type + '#' + action_name}
 
         # Prepare the skeleton of the XML.
         root, body = get_SOAP_RPC_base()
@@ -84,7 +85,7 @@ class Service(object):
             # Add the action-specific tag.
             append_root = ET.SubElement(body,
                                         'u:' + action_name,
-                                        {'xmlns:u': service})
+                                        {'xmlns:u': self.service_type})
 
             # Each element in the dictionary should have a tag.
             for argname, argval in soap_args:
